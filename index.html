@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script type="text/javascript" src="script.js" ></script>
+</head>
+<body ng-app="myModule">
+  <div ng-controller = "myController">
+    <div id="header">
+      <div id="heading_text">
+        <h3>MOVIE SEAT RESERVATION</h3>
+      </div>
+
+      <!-- Enable the button "Start Selecting" only if user starts writing something in the input  -->
+      <div id="heading_form">
+        <form>
+          Name: <input type="text" name="Name" ng-model="userName">
+          Number Of Seats: <input type="number" value="1" min="1" ng-model="NoOfSeats" ng-change="resetSeatLayout()">
+          <br><br>  
+          <button type="button" value="Start Selecting" ng-disabled="!userName" ng-click="enableLayout()">Start Selecting</button>
+          <br><br>
+        </form>  
+      </div>
+    </div>
+
+    <div id="container" ng-show="showLayout">
+      <div id="container_heading">
+        <h6>SCREEN THIS SIDE</h6>
+      </div>
+
+      <div id="container_box">
+        <table>
+          <thead>
+            <tr>
+              <td><h6></h6></td>
+              <td>
+                <div class="seat" ng-repeat="x in columns">
+                  <div ng-if="x.col != '0'" class="">{{ x.col }}</div>
+                </div>
+              </td>              
+            </tr>
+          </thead>
+          <tr ng-repeat="seat in seats">
+            <td>
+              <div class="seat-alphabet">{{ seat.row }}</div>
+            </td>
+            <td class="seat-rows">
+              <div class="seat" ng-repeat="column in seat.columns" ng-class="{ 'seat-red' : column.status === 'unavailable' }">
+                <div ng-if="column.col != '0'" id="{{column.col}}" class="seat-border" ng-class="" ng-click="SetSelected();"></div>
+                <!-- <div ng-if="column.col === '0'"class="seat-borderless"></div> -->
+              </div>
+            </td>
+          </tr>
+        </table>
+        <br>
+      </div>
+
+      <div id="container_button">
+        <button type="submit" value="Confirm Selection" ng-disabled="disabled" ng-click="confirmUser()">Confirm Selection</button>
+      </div>
+    </div>
+
+    <div id="footer" ng-show="showLayout">
+      <div id="user_table">
+        <table id="table2">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>No Of Seats</th>
+              <th>Seats</th>
+            </tr>            
+          </thead>
+          <tbody>
+            <tr ng-repeat="user in users">
+              <td>{{ user.name }}</td>
+              <td>{{ user.noOfSeats }}</td>
+              <td>{{ arrayToString(user.seats) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="seat_map">
+        <div class="seat-refer green"></div>
+        <h5 id="selected_text">Selected Seat</h5>
+        <div class="seat-refer red"></div>
+        <h5 id="booked_text">Booked Seat</h5>
+        <div class="seat-refer"></div>
+        <h5 id="empty_text">Empty Seat</h5>
+      </div>
+      <div id="footer_button">
+        <button type="submit" value="Book another seat" ng-show="ConfirmButtonClicked" ng-click="bookAnotherSeat()">Book Another seat</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
